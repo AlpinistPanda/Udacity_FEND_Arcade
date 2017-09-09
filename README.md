@@ -1,6 +1,28 @@
-frontend-nanodegree-arcade-game
-===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+Frogger game
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+This is my Frogger arcade game clone for the Udacity Front-End Web Development nanodegree.
+
+To run the game
+
+Please go to my GitHub page and enjoy the game :) build and run the app :
+
+1.Download files, or clone repository from [repository url] 2.Open index.html to launch the game
+
+To play the game
+
+Use the arrow keys to move the player up, down, left and right.
+Player starts with extra 3 lives and loses 1 if she runs into a bug.
+When your player has no lives remaining, she can get an extra life if your score is divisible by 15.
+Scoring
+
+Get 5 points per star. Collect a star by moving to its square.
+Get 10 points every time the player reaches the water.
+Whenever your player gets an extra life, you get 5 bonus points.
+Credits
+
+Having absolutely zero programming background, I needed the step-by-step explanations given in the discussion thread “A Study in JavaScript: Provided Code for the Game Clone,” written by Udayan. The post explained the engine and resources JS files very well.
+
+However, I just couldn't figure out app.js on my own. So I copied from students who had posted their project repositories on GitHub and shared the links in the forum. Many thanks to danielmoi, morapost, andrewlw89, jyothisridhar, ayimaster, lacyjpr and joseterrera.
+
+Once I meet the code reviewers' expectations for this project, I will pay it forward by sharing my work too, in case someone can learn from it.

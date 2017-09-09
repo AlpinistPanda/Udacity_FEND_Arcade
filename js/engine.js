@@ -9,7 +9,7 @@
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
  *
- * This engine makes the canvas' context (ctx) object globally available to make 
+ * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
 
@@ -22,10 +22,12 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        game_state = 1,
+        ch = 0;
 
     canvas.width = 505;
-    canvas.height = 606;
+    canvas.height = 656;    
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -44,8 +46,14 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
+
         update(dt);
-        render();
+
+//        var game_state = 1; // Game state var 1 -> start screen 2 -> game
+        if (game_state == 1) {  // Game state oppening state of the game
+          first_scene(ch);
+        }
+        else render();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -77,9 +85,24 @@ var Engine = (function(global) {
      * functionality this way (you could just implement collision detection
      * on the entities themselves within your app.js file).
      */
+
     function update(dt) {
-        updateEntities(dt);
-        // checkCollisions();
+        if(game_state == 2){  // only update the entities during the game
+            updateEntities(dt);
+            checkCollisions();
+            if(player.score >= 30) {
+                alert('YOU WIN!!');
+                game_state = 1;
+                player.reset();
+            }
+
+            if(player.lives == 0) {
+                alert('GAME OVER!!');
+                game_state = 1;
+                player.reset();
+            }
+        }
+
     }
 
     /* This is called by the update function and loops through all of the
@@ -96,6 +119,51 @@ var Engine = (function(global) {
         player.update();
     }
 
+
+    function checkCollisions() {
+        player.collision();
+        star.collision();
+    }
+
+
+    /**
+    * This function runs when the game starts and a player is out of lives.
+    *
+    */
+
+    function first_scene(ch){
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      ctx.font = "bold 30px sans-serif";
+      ctx.fillText("Frogger Game", 140, 100);
+      ctx.fillText("Select Your character", 120, 200);
+      ctx.fillText("Press Enter to Start the game", 60, 500);
+      var characters = ['images/char-boy.png',
+                        'images/char-cat-girl.png',
+                        'images/char-horn-girl.png',
+                        'images/char-pink-girl.png',
+                        'images/char-princess-girl.png'
+                      ];
+
+      for (col = 0; col < 5; col++) {
+
+          /* The drawImage function of the canvas' context element
+           * requires 3 parameters: the image to draw, the x coordinate
+           * to start drawing and the y coordinate to start drawing.
+           * We're using our Resources helpers to refer to our images
+           * so that we get the benefits of caching these images, since
+           * we're using them over and over.
+           */
+          ctx.drawImage(Resources.get(characters[col]), col * 101, 200);
+      }
+      ctx.strokeStyle = "red";
+      // var ch = 0;  // character selection
+      ctx.strokeRect(ch*101, 250, 101, 100);
+
+    }
+
+
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
@@ -108,10 +176,10 @@ var Engine = (function(global) {
          */
         var rowImages = [
                 'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
+                'images/stone-block.png',   // Row 1 of 4 of stone
+                'images/stone-block.png',   // Row 2 of 4 of stone
+                'images/stone-block.png',   // Row 3 of 4 of stone
+                'images/stone-block.png',   // Row 4 of 4 of stone
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
             numRows = 6,
@@ -151,7 +219,33 @@ var Engine = (function(global) {
         });
 
         player.render();
+        star.render();
     }
+
+    // This listens for key presses and sends the keys to your
+    // Player.handleInput() method. You don't need to modify this.
+    document.addEventListener('keyup', function(e) {
+        var allowedKeys = {
+            37: 'left',
+            39: 'right',
+            13: 'enter'
+
+        };
+
+        // player.handleInput(allowedKeys[e.keyCode]);
+        if(e.keyCode == 37 && ch>0){
+          ch = ch-1;
+        }
+
+        if(e.keyCode == 39 && ch<4){
+          ch = ch+1;
+        }
+
+        if(e.keyCode == 13){    // start the game
+          game_state = 2;
+          player.changeSprite(ch);
+        }
+    });
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
@@ -170,7 +264,12 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/star.png'
     ]);
     Resources.onReady(init);
 
