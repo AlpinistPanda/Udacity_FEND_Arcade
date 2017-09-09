@@ -90,7 +90,7 @@ var Engine = (function(global) {
         if(game_state == 2){  // only update the entities during the game
             updateEntities(dt);
             checkCollisions();
-            if(player.score >= 30) {
+            if(player.score >= 150) {
                 alert('YOU WIN!!');
                 game_state = 1;
                 player.reset();
